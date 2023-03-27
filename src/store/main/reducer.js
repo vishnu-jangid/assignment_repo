@@ -1,7 +1,8 @@
 import * as types from './types';
 
 const initialState = {
-  users:[]
+  users:[],
+  urls: []
 };
 
 const reducer = (state = initialState, action) => {
@@ -10,12 +11,21 @@ const reducer = (state = initialState, action) => {
     case types.ADD: {
       if (action?.payload) {
         let resp = action.payload;
-//         let allUsers = state.users;
-//         allUsers.splice(0, 0, resp);
-
         return {
           ...state,
-          users: resp//allUsers
+          users: resp
+        };
+      } else {
+        return { ...state }
+      }
+    }
+
+    case types.ADD_URL: {
+      if (action?.payload) {
+        let resp = action.payload;
+        return {
+          ...state,
+          urls: resp
         };
       } else {
         return { ...state }

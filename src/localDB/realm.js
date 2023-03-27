@@ -1,11 +1,11 @@
 import Realm from 'realm';
 import _ from 'lodash';
 
-import {AddLocalSchema, ADDLOCAL} from './schemas';
+import {AddLocalSchema, ADDLOCAL, AddLocalUrlSchema, ADDLOCALURL} from './schemas';
 
 export const realm = new Realm({
   path: 'TestProject.realm',
-  schema: [AddLocalSchema],
+  schema: [AddLocalSchema, AddLocalUrlSchema],
   // schemaVersion: 1,
   deleteRealmIfMigrationNeeded: true,
 });
@@ -19,13 +19,7 @@ export const addLocal = data => {
 
 //GET CURRENT USER
 export const getLocal = () => {
-  // let allData = null;
   let localData = realm.objects(ADDLOCAL);
-  // if (localData?.length > 0) {
-  //   localData.forEach(e => {
-  //     allData = e;
-  //   });
-  // }
   return localData;
 };
 
@@ -49,8 +43,30 @@ export const updateUserLocal = data => {
 
 export const deleteUserLocal = id => {
   let localData = realm.objects(ADDLOCAL).filtered(' ( id = $0 )', id)
-  console.log("localData: ", localData);
   realm.write(() => {
     realm.delete(localData[0])
   });
+};
+
+//Add local url 
+export const addLocalUrl = data => {
+  realm.write(() => {
+    realm.create(ADDLOCALURL, data, Realm.UpdateMode.Modified);
+  });
+};
+
+export const getLocalUrl = () => {
+  let localData = realm.objects(ADDLOCALURL);
+  return localData;
+};
+
+export const updateLocalUrl = data => {
+  console.log("!!!@@@######", data);
+  let localData = realm.objects(ADDLOCALURL).filtered(' ( id = $0 )', data.id)
+  if(localData?.length > 0) {
+    realm.write(() => {
+      localData[0].id = data?.id;
+      localData[0].status = data?.status;
+    })
+  }
 };
